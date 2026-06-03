@@ -2,12 +2,12 @@ package com.ivanminyaev.anonymous_chat_bot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class AnonymousChatBotApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(AnonymousChatBotApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(AnonymousChatBotApplication.class, args);
+    }
 }

@@ -61,4 +61,13 @@ public class InMemoryMatchmakingStorage implements MatchmakingStorage {
 
         return dialog;
     }
+
+    @Override
+    public void removeFromQueue(long chatId) {
+        if (!isQueued(chatId)) {
+            return;
+        }
+
+        this.queue.remove(chatId);
+    }
 }

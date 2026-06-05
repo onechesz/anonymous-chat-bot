@@ -8,4 +8,6 @@ public interface MatchmakingStorage {
     void search(long chatId);
 
     long getPartnerChatId(long chatId);
+
+    void removeFromQueue(long chatId);
 }

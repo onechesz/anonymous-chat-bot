@@ -1,6 +1,7 @@
 package com.ivanminyaev.anonymous_chat_bot.handler;
 
 import com.ivanminyaev.anonymous_chat_bot.keyboard.Command;
+import com.ivanminyaev.anonymous_chat_bot.service.ChatService;
 import com.ivanminyaev.anonymous_chat_bot.service.MatchmakingService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 public class TextHandler {
     MatchmakingService matchmakingService;
+    ChatService chatService;
 
     public void execute(Message message) throws TelegramApiException {
         final String text = message.getText();
@@ -21,6 +23,8 @@ public class TextHandler {
 
         switch (command) {
             case SEARCH -> matchmakingService.search(message);
+            case STOP -> matchmakingService.stop(message);
+            case null, default -> chatService.send(message);
         }
     }
 }

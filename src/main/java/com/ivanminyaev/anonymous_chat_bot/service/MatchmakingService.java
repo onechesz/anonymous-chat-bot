@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import static com.ivanminyaev.anonymous_chat_bot.keyboard.ReplyKeyboardTemplate.searchMarkup;
 import static com.ivanminyaev.anonymous_chat_bot.keyboard.ReplyKeyboardTemplate.stopMarkup;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -27,6 +28,9 @@ public class MatchmakingService {
     private static final String QUEUED = "⌛ Вы уже находитесь в поиске, подождите...";
     private static final String CHATTING = "\uD83D\uDEA8 На данный момент вы находитесь в диалоге. Завершите его, чтобы начать поиск нового собеседника: /stop";
     private static final String SEARCHING = "⏳ Ищем собеседника...";
+    private static final String CHATTING_STOP = "\uD83D\uDEA8 Вы уже нашли собеседника.";
+    private static final String IDLE = "\uD83D\uDEA8 Вы не находитесь в поиске.";
+    private static final String UNQUEUED = "\uD83D\uDC94 Поиск собеседника остановлен.";
 
     public void search(Message message) throws TelegramApiException {
         final long chatId = message.getChatId();
@@ -59,5 +63,27 @@ public class MatchmakingService {
         }
 
         messageSender.send(sendMessage);
+    }
+
+    public void stop(Message message) throws TelegramApiException {
+        final long chatId = message.getChatId();
+        final int replyToMessageId = message.getMessageId();
+
+        final boolean chatting = matchmakingStorage.isChatting(chatId);
+        if (chatting) {
+            messageSender.send(chatId, CHATTING_STOP, replyToMessageId, new ReplyKeyboardRemove(true));
+
+            return;
+        }
+
+        final boolean queued = matchmakingStorage.isQueued(chatId);
+        if (!queued) {
+            messageSender.send(chatId, IDLE, replyToMessageId, searchMarkup());
+
+            return;
+        }
+
+        matchmakingStorage.removeFromQueue(chatId);
+        messageSender.send(chatId, UNQUEUED, replyToMessageId, searchMarkup());
     }
 }

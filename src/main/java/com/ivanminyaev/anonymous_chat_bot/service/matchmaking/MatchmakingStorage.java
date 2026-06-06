@@ -10,4 +10,6 @@ public interface MatchmakingStorage {
     long getPartnerChatId(long chatId);
 
     void removeFromQueue(long chatId);
+
+    void stopDialog(long chatId);
 }

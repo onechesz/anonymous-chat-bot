@@ -36,6 +36,15 @@ public class MessageSender {
         this.send(sendMessage);
     }
 
+    public void send(long chatId, String text, ReplyKeyboard replyKeyboard) throws TelegramApiException {
+        final SendMessage sendMessage = SendMessage.builder()
+                .chatId(chatId)
+                .text(text)
+                .replyMarkup(replyKeyboard).build();
+
+        this.send(sendMessage);
+    }
+
     public void send(long chatId, String text, int replyToMessageId, ReplyKeyboard replyKeyboard) throws TelegramApiException {
         final SendMessage sendMessage = SendMessage.builder()
                 .chatId(chatId)

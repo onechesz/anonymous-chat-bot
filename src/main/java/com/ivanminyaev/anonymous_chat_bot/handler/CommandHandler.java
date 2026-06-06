@@ -15,12 +15,14 @@ public class CommandHandler {
     UserService userService;
 
     private static final String START = "/start";
+    private static final String STOP = "/stop";
 
     public void execute(Message message) throws TelegramApiException {
         final String text = message.getText();
 
         switch (text) {
             case START -> userService.start(message);
+            case STOP -> userService.stop(message);
         }
     }
 }

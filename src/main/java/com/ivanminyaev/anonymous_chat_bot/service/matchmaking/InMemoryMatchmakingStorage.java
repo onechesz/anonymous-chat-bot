@@ -70,4 +70,13 @@ public class InMemoryMatchmakingStorage implements MatchmakingStorage {
 
         this.queue.remove(chatId);
     }
+
+    @Override
+    public void stopDialog(long chatId) {
+        Long partnerChatId = dialogs.remove(chatId);
+
+        if (partnerChatId != null) {
+            dialogs.remove(partnerChatId);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.ivanminyaev.anonymous_chat_bot.service.matchmaking;
 
 import com.ivanminyaev.anonymous_chat_bot.exception.NoSuitablePartnerException;
+import com.ivanminyaev.anonymous_chat_bot.exception.PartnerNotFoundException;
 import com.ivanminyaev.anonymous_chat_bot.exception.UserChattingException;
 import com.ivanminyaev.anonymous_chat_bot.exception.UserQueuedException;
 import lombok.AccessLevel;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -57,7 +59,7 @@ public class InMemoryMatchmakingStorage implements MatchmakingStorage {
 
     @Override
     public long getPartnerChatId(long chatId) {
-        long dialog = dialogs.get(chatId);
+        long dialog = Optional.ofNullable(dialogs.get(chatId)).orElseThrow(PartnerNotFoundException::new);
 
         return dialog;
     }

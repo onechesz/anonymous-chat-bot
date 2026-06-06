@@ -1,6 +1,7 @@
 package com.ivanminyaev.anonymous_chat_bot.service;
 
 import com.ivanminyaev.anonymous_chat_bot.exception.NoSuitablePartnerException;
+import com.ivanminyaev.anonymous_chat_bot.exception.PartnerNotFoundException;
 import com.ivanminyaev.anonymous_chat_bot.exception.UserChattingException;
 import com.ivanminyaev.anonymous_chat_bot.exception.UserQueuedException;
 import com.ivanminyaev.anonymous_chat_bot.service.matchmaking.MatchmakingStorage;
@@ -31,6 +32,9 @@ public class MatchmakingService {
     private static final String CHATTING_STOP = "\uD83D\uDEA8 Вы уже нашли собеседника.";
     private static final String IDLE = "\uD83D\uDEA8 Вы не находитесь в поиске.";
     private static final String UNQUEUED = "\uD83D\uDC94 Поиск собеседника остановлен.";
+    private static final String STOP_NO_DIALOG = "У вас сейчас нет собеседника.";
+    private static final String STOP = "Вы завершили диалог.";
+    private static final String STOP_PARTNER = "Ваш собеседник завершил диалог.";
 
     public void search(Message message) throws TelegramApiException {
         final long chatId = message.getChatId();
@@ -85,5 +89,24 @@ public class MatchmakingService {
 
         matchmakingStorage.removeFromQueue(chatId);
         messageSender.send(chatId, UNQUEUED, replyToMessageId, searchMarkup());
+    }
+
+    public void stopDialog(Message message) throws TelegramApiException {
+        final long chatId = message.getChatId();
+        final long partnerChatId;
+        final int messageId = message.getMessageId();
+
+        try {
+            partnerChatId = matchmakingStorage.getPartnerChatId(chatId);
+        } catch (PartnerNotFoundException e) {
+            messageSender.send(chatId, STOP_NO_DIALOG, messageId);
+
+            return;
+        }
+
+        matchmakingStorage.stopDialog(chatId);
+
+        messageSender.send(chatId, STOP, messageId, searchMarkup());
+        messageSender.send(partnerChatId, STOP_PARTNER, searchMarkup());
     }
 }

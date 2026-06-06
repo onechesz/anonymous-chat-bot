@@ -1,5 +1,6 @@
 package com.ivanminyaev.anonymous_chat_bot.handler;
 
+import com.ivanminyaev.anonymous_chat_bot.service.MatchmakingService;
 import com.ivanminyaev.anonymous_chat_bot.service.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 public class CommandHandler {
     UserService userService;
+    MatchmakingService matchmakingService;
 
     private static final String START = "/start";
     private static final String STOP = "/stop";
@@ -22,7 +24,7 @@ public class CommandHandler {
 
         switch (text) {
             case START -> userService.start(message);
-            case STOP -> userService.stop(message);
+            case STOP -> matchmakingService.stopDialog(message);
         }
     }
 }

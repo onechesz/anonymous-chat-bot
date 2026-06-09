@@ -179,3 +179,120 @@ databaseChangeLog:
         - dropForeignKeyConstraint:
             baseTableName: chat
             constraintName: chat_user2_id_fk
+
+  - changeSet:
+      id: 005-create-message
+      author: ivan minyaev
+
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: message
+
+      changes:
+        - createTable:
+            tableName: message
+
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: telegram_id
+                  type: int
+
+              - column:
+                  name: chat_id
+                  type: bigint
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: bigint
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: content_id
+                  type: bigint
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: sent_at
+                  type: timestamp
+
+                  constraints:
+                    nullable: false
+
+      rollback:
+        - dropTable:
+            tableName: message
+
+  - changeSet:
+      id: 006-add-fk-message-chat
+      author: ivan minyaev
+
+      preConditions:
+        - and:
+            - tableExists:
+                tableName: message
+
+            - tableExists:
+                tableName: chat
+
+            - not:
+                foreignKeyConstraintExists:
+                  foreignKeyName: message_chat_id_fk
+
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: message
+            baseColumnNames: chat_id
+            referencedTableName: chat
+            referencedColumnNames: id
+            constraintName: message_chat_id_fk
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: message
+            constraintName: message_chat_id_fk
+
+  - changeSet:
+      id: 007-add-fk-message-user
+      author: ivan minyaev
+
+      preConditions:
+        - and:
+            - tableExists:
+                tableName: message
+
+            - tableExists:
+                tableName: user
+
+            - not:
+                foreignKeyConstraintExists:
+                  foreignKeyName: message_user_id_fk
+
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: message
+            baseColumnNames: user_id
+            referencedTableName: user
+            referencedColumnNames: id
+            constraintName: message_user_id_fk
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: message
+            constraintName: message_user_id_fk

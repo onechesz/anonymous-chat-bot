@@ -13,4 +13,12 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
                   AND c.closedAt IS NULL
             """)
     ChatEntity findActive(Long user1TelegramId, Long user2TelegramId);
+
+    @Query("""
+                SELECT c
+                FROM ChatEntity c
+                WHERE (c.user1.telegramId = :userTelegramId OR c.user2.telegramId = :userTelegramId)
+                  AND c.closedAt IS NULL
+            """)
+    ChatEntity findActive(Long userTelegramId);
 }

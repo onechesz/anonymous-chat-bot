@@ -2,6 +2,7 @@ package com.ivanminyaev.anonymous_chat_bot.handler.router;
 
 import com.ivanminyaev.anonymous_chat_bot.handler.CommandHandler;
 import com.ivanminyaev.anonymous_chat_bot.handler.TextHandler;
+import com.ivanminyaev.anonymous_chat_bot.service.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @AllArgsConstructor
 @Component
 public class UpdateRouter {
+    UserService userService;
     CommandHandler commandHandler;
     TextHandler textHandler;
 
@@ -22,6 +24,8 @@ public class UpdateRouter {
         if (!update.hasMessage()) {
             return;
         }
+
+        userService.updateOrRegister(update.getMessage().getFrom());
 
         final Message message = update.getMessage();
 

@@ -1,0 +1,181 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-user
+      author: ivan minyaev
+
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: user
+
+      changes:
+        - createTable:
+            tableName: user
+
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: telegram_id
+                  type: bigint
+
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: username
+                  type: varchar(32)
+
+              - column:
+                  name: first_name
+                  type: varchar(64)
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: last_name
+                  type: varchar(64)
+
+              - column:
+                  name: is_bot
+                  type: boolean
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: registered_at
+                  type: timestamp
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: last_seen_at
+                  type: timestamp
+
+                  constraints:
+                    nullable: false
+
+      rollback:
+        - dropTable:
+            tableName: user
+
+  - changeSet:
+      id: 002-create-chat
+      author: ivan minyaev
+
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: chat
+
+      changes:
+        - createTable:
+            tableName: chat
+
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: user1_id
+                  type: bigint
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user2_id
+                  type: bigint
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: timestamp
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: closed_at
+                  type: timestamp
+
+      rollback:
+        - dropTable:
+            tableName: chat
+
+  - changeSet:
+      id: 003-add-fk-chat-user1
+      author: ivan minyaev
+
+      preConditions:
+        - and:
+            - tableExists:
+                tableName: chat
+
+            - tableExists:
+                tableName: user
+
+            - not:
+                foreignKeyConstraintExists:
+                  foreignKeyName: chat_user1_id_fk
+
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: chat
+            baseColumnNames: user1_id
+            referencedTableName: user
+            referencedColumnNames: id
+            constraintName: chat_user1_id_fk
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: chat
+            constraintName: chat_user1_id_fk
+
+  - changeSet:
+      id: 004-add-fk-chat-user2
+      author: ivan minyaev
+
+      preConditions:
+        - and:
+            - tableExists:
+                tableName: chat
+
+            - tableExists:
+                tableName: user
+
+            - not:
+                foreignKeyConstraintExists:
+                  foreignKeyName: chat_user2_id_fk
+
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: chat
+            baseColumnNames: user2_id
+            referencedTableName: user
+            referencedColumnNames: id
+            constraintName: chat_user2_id_fk
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: chat
+            constraintName: chat_user2_id_fk

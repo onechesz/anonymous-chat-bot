@@ -2,6 +2,15 @@ spring:
   application:
     name: anonymous-chat-bot
 
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
 telegram:
   username: anonchatty_bot
   token: ${BOT_TOKEN}

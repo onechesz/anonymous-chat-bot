@@ -1,5 +1,6 @@
 package com.ivanminyaev.anonymous_chat_bot.dao.entity;
 
+import com.ivanminyaev.anonymous_chat_bot.dao.entity.enumeration.ContentType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -7,30 +8,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "message")
-public class MessageEntity {
+@Table(name = "content")
+public class ContentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "telegram_id")
-    Integer telegramId;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_id", nullable = false)
-    ChatEntity chat;
+    @JoinColumn(name = "message_id", nullable = false)
+    MessageEntity message;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    UserEntity user;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    ContentType type;
 
-    @Column(name = "sent_at", nullable = false)
-    LocalDateTime sentAt;
+    @Column
+    String text;
+
+    @Column(name = "telegram_file_id")
+    Long telegramFileId;
 }

@@ -4,6 +4,8 @@ databaseChangeLog:
       author: ivan minyaev
 
       preConditions:
+        - onFail: MARK_RAN
+
         - not:
             - tableExists:
                 tableName: user
@@ -75,6 +77,8 @@ databaseChangeLog:
       author: ivan minyaev
 
       preConditions:
+        - onFail: MARK_RAN
+
         - not:
             - tableExists:
                 tableName: chat
@@ -127,6 +131,8 @@ databaseChangeLog:
       author: ivan minyaev
 
       preConditions:
+        - onFail: MARK_RAN
+
         - and:
             - tableExists:
                 tableName: chat
@@ -156,6 +162,8 @@ databaseChangeLog:
       author: ivan minyaev
 
       preConditions:
+        - onFail: MARK_RAN
+
         - and:
             - tableExists:
                 tableName: chat
@@ -185,6 +193,8 @@ databaseChangeLog:
       author: ivan minyaev
 
       preConditions:
+        - onFail: MARK_RAN
+
         - not:
             - tableExists:
                 tableName: message
@@ -222,13 +232,6 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: content_id
-                  type: bigint
-
-                  constraints:
-                    nullable: false
-
-              - column:
                   name: sent_at
                   type: timestamp
 
@@ -244,6 +247,8 @@ databaseChangeLog:
       author: ivan minyaev
 
       preConditions:
+        - onFail: MARK_RAN
+
         - and:
             - tableExists:
                 tableName: message
@@ -273,6 +278,8 @@ databaseChangeLog:
       author: ivan minyaev
 
       preConditions:
+        - onFail: MARK_RAN
+
         - and:
             - tableExists:
                 tableName: message
@@ -296,3 +303,108 @@ databaseChangeLog:
         - dropForeignKeyConstraint:
             baseTableName: message
             constraintName: message_user_id_fk
+
+  - changeSet:
+      id: 008-create-table-content
+      author: ivan minyaev
+
+      preConditions:
+        - onFail: MARK_RAN
+
+        - not:
+            - tableExists:
+                tableName: content
+
+      changes:
+        - createTable:
+            tableName: content
+
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: message_id
+                  type: bigint
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type
+                  type: varchar(20)
+
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: text
+                  type: text
+
+              - column:
+                  name: telegram_file_id
+                  type: bigint
+
+      rollback:
+        - dropTable:
+            tableName: content
+
+  - changeSet:
+      id: 009-add-fk-content-message
+      author: ivan minyaev
+
+      preConditions:
+        - onFail: MARK_RAN
+
+        - and:
+            - tableExists:
+                tableName: content
+
+            - tableExists:
+                tableName: message
+
+            - not:
+                foreignKeyConstraintExists:
+                  foreignKeyName: content_message_id_fk
+
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: content
+            baseColumnNames: message_id
+            referencedTableName: message
+            referencedColumnNames: id
+            constraintName: content_message_id_fk
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: content
+            constraintName: content_message_id_fk
+
+  - changeSet:
+      id: 010-add-content-type-check
+      author: ivan minyaev
+
+      preConditions:
+        - onFail: MARK_RAN
+
+        - tableExists:
+            tableName: content
+
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE content
+              ADD CONSTRAINT content_type_chk
+              CHECK (type IN ('TEXT', 'PHOTO', 'VIDEO', 'ANIMATION', 'VOICE', 'DOCUMENT', 'STICKER'));
+
+      rollback:
+        - sql:
+            sql: |
+              ALTER TABLE content
+              DROP CONSTRAINT content_type_chk;

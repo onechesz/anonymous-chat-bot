@@ -102,6 +102,10 @@ public class InMemoryMatchmakingStorage implements MatchmakingStorage {
         final UserEntity user1 = userRepository.findByTelegramId(chatId);
         final UserEntity user2 = userRepository.findByTelegramId(partnerChatId);
 
+        if (user1 == null || user2 == null) {
+            return;
+        }
+
         final ChatEntity chat = new ChatEntity();
         chat.setUser1(user1);
         chat.setUser2(user2);

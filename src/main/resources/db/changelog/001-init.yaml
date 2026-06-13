@@ -349,7 +349,7 @@ databaseChangeLog:
 
               - column:
                   name: telegram_file_id
-                  type: bigint
+                  type: varchar(255)
 
       rollback:
         - dropTable:
@@ -400,11 +400,12 @@ databaseChangeLog:
         - sql:
             sql: |
               ALTER TABLE content
-              ADD CONSTRAINT content_type_chk
-              CHECK (type IN ('TEXT', 'PHOTO', 'VIDEO', 'ANIMATION', 'VOICE', 'DOCUMENT', 'STICKER'));
+                  ADD CONSTRAINT content_type_chk
+                      CHECK (type IN ('TEXT', 'PHOTO', 'VIDEO', 'ANIMATION', 'VOICE', 'VIDEO_NOTE', 'DOCUMENT',
+                                      'STICKER', 'AUDIO'));
 
       rollback:
         - sql:
             sql: |
               ALTER TABLE content
-              DROP CONSTRAINT content_type_chk;
+                  DROP CONSTRAINT content_type_chk;

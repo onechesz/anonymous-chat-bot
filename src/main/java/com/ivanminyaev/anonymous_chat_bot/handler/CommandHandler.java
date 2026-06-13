@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
 @Component
-public class CommandHandler {
+public class CommandHandler implements Handler {
     UserService userService;
     MatchmakingService matchmakingService;
 

@@ -31,5 +31,5 @@ public class ContentEntity {
     String text;
 
     @Column(name = "telegram_file_id")
-    Long telegramFileId;
+    String telegramFileId;
 }

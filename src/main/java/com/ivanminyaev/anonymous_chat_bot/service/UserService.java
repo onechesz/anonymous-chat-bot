@@ -47,6 +47,7 @@ public class UserService {
             userEntity = new UserEntity();
 
             userEntity.setTelegramId(telegramId);
+            userEntity.setBot(false); // TODO: temp
             userEntity.setRegisteredAt(now);
         }
 

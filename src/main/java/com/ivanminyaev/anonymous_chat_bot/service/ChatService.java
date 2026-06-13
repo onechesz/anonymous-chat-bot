@@ -36,8 +36,8 @@ import static com.ivanminyaev.anonymous_chat_bot.keyboard.ReplyKeyboardTemplate.
 @Service
 @Transactional
 public class ChatService {
-    private static final String QUEUED = "⌛ Вы находитесь в поиске собеседника, подождите...";
-    private static final String IDLE = "\uD83D\uDEA8 У вас сейчас нет собеседника. Начните поиск!";
+    private static final String QUEUED = "<i>Вы находитесь в поиске собеседника, подождите...</i>";
+    private static final String IDLE = "<i>У вас сейчас нет собеседника. Начните поиск!</i>";
     private static final long MEDIA_GROUP_SEND_DELAY = 3;
 
     MatchmakingStorage matchmakingStorage;

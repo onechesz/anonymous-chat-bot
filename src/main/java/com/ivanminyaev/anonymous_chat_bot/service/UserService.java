@@ -24,7 +24,7 @@ public class UserService {
     UserRepository userRepository;
     MessageSender messageSender;
 
-    private static final String START = "\uD83D\uDC4B Добро пожаловать в Анончатти, %s!";
+    private static final String START = "<i>Добро пожаловать в <b>Анончатти</b>, %s!</i>";
 
     public void start(Message message) throws TelegramApiException {
         final User user = message.getFrom();

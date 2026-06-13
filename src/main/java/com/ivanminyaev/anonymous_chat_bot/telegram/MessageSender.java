@@ -37,7 +37,8 @@ public class MessageSender {
         final SendMessage sendMessage = SendMessage.builder()
                 .chatId(chatId)
                 .text(text)
-                .replyToMessageId(replyToMessageId).build();
+                .replyToMessageId(replyToMessageId)
+                .parseMode("HTML").build();
 
         this.send(sendMessage);
     }
@@ -46,7 +47,8 @@ public class MessageSender {
         final SendMessage sendMessage = SendMessage.builder()
                 .chatId(chatId)
                 .text(text)
-                .replyMarkup(replyKeyboard).build();
+                .replyMarkup(replyKeyboard)
+                .parseMode("HTML").build();
 
         this.send(sendMessage);
     }
@@ -56,7 +58,8 @@ public class MessageSender {
                 .chatId(chatId)
                 .text(text)
                 .replyToMessageId(replyToMessageId)
-                .replyMarkup(replyKeyboard).build();
+                .replyMarkup(replyKeyboard)
+                .parseMode("HTML").build();
 
         this.send(sendMessage);
     }

@@ -22,19 +22,19 @@ import static com.ivanminyaev.anonymous_chat_bot.keyboard.ReplyKeyboardTemplate.
 @AllArgsConstructor
 @Service
 public class MatchmakingService {
+    private static final String FOUND = "<i>Собеседник найден. Начинайте общение!</i>";
+    private static final String QUEUED = "<i>Вы уже находитесь в поиске, подождите...</i>";
+    private static final String CHATTING = "<i>На данный момент вы находитесь в диалоге. Завершите его, чтобы начать поиск нового собеседника: /stop</i>";
+    private static final String SEARCHING = "<i>Ищем собеседника...</i>";
+    private static final String CHATTING_STOP = "<i>Вы уже нашли собеседника.</i>";
+    private static final String IDLE = "<i>Вы не находитесь в поиске.</i>";
+    private static final String UNQUEUED = "<i>Поиск собеседника остановлен.</i>";
+    private static final String STOP_NO_DIALOG = "<i>У вас сейчас нет собеседника.</i>";
+    private static final String STOP = "<i>Вы завершили диалог.</i>";
+    private static final String STOP_PARTNER = "<i>Ваш собеседник завершил диалог.</i>";
+
     MatchmakingStorage matchmakingStorage;
     MessageSender messageSender;
-
-    private static final String FOUND = "\uD83D\uDE4C Собеседник найден. Начинайте общение!";
-    private static final String QUEUED = "⌛ Вы уже находитесь в поиске, подождите...";
-    private static final String CHATTING = "\uD83D\uDEA8 На данный момент вы находитесь в диалоге. Завершите его, чтобы начать поиск нового собеседника: /stop";
-    private static final String SEARCHING = "⏳ Ищем собеседника...";
-    private static final String CHATTING_STOP = "\uD83D\uDEA8 Вы уже нашли собеседника.";
-    private static final String IDLE = "\uD83D\uDEA8 Вы не находитесь в поиске.";
-    private static final String UNQUEUED = "\uD83D\uDC94 Поиск собеседника остановлен.";
-    private static final String STOP_NO_DIALOG = "У вас сейчас нет собеседника.";
-    private static final String STOP = "Вы завершили диалог.";
-    private static final String STOP_PARTNER = "Ваш собеседник завершил диалог.";
 
     public void search(Message message) throws TelegramApiException {
         final long chatId = message.getChatId();
@@ -43,7 +43,8 @@ public class MatchmakingService {
         final SendMessage sendMessage = SendMessage.builder()
                 .chatId(chatId)
                 .text(FOUND)
-                .replyToMessageId(messageId).build();
+                .replyToMessageId(messageId)
+                .parseMode("HTML").build();
 
         try {
             matchmakingStorage.search(chatId);
@@ -52,7 +53,8 @@ public class MatchmakingService {
             SendMessage partnerSendMessage = SendMessage.builder()
                     .chatId(partnerChatId)
                     .text(FOUND)
-                    .replyMarkup(new ReplyKeyboardRemove(true)).build();
+                    .replyMarkup(new ReplyKeyboardRemove(true))
+                    .parseMode("HTML").build();
             messageSender.send(partnerSendMessage);
 
             sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));

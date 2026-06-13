@@ -11,9 +11,11 @@ import java.util.Arrays;
 @AllArgsConstructor
 @Getter
 public enum Command {
-    SEARCH("\uD83D\uDD0E Искать собеседника"),
-    STOP("❌ Остановить поиск");
+    START("/start", "Запустить бота"),
+    SEARCH("/search", "Искать собеседника"),
+    STOP("/stop", "Остановить поиск");
 
+    String command;
     String text;
 
     public static Command of(String text) {

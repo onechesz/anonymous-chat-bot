@@ -19,7 +19,6 @@ import static com.ivanminyaev.anonymous_chat_bot.keyboard.ReplyKeyboardTemplate.
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
 @Service
-@Transactional
 public class UserService {
     UserRepository userRepository;
     MessageSender messageSender;
@@ -37,6 +36,7 @@ public class UserService {
         messageSender.send(chatId, text, messageId, searchMarkup());
     }
 
+    @Transactional
     public void updateOrRegister(User user) {
         final LocalDateTime now = LocalDateTime.now();
 
@@ -47,7 +47,7 @@ public class UserService {
             userEntity = new UserEntity();
 
             userEntity.setTelegramId(telegramId);
-            userEntity.setBot(false); // TODO: temp
+            userEntity.setBot(user.getIsBot());
             userEntity.setRegisteredAt(now);
         }
 

@@ -30,7 +30,7 @@ public class MessageSender {
                 .chatId(chatId)
                 .text(text).build();
 
-        this.send(sendMessage);
+        send(sendMessage);
     }
 
     public void send(long chatId, String text, int replyToMessageId) throws TelegramApiException {
@@ -40,7 +40,7 @@ public class MessageSender {
                 .replyToMessageId(replyToMessageId)
                 .parseMode("HTML").build();
 
-        this.send(sendMessage);
+        send(sendMessage);
     }
 
     public void send(long chatId, String text, ReplyKeyboard replyKeyboard) throws TelegramApiException {
@@ -50,7 +50,7 @@ public class MessageSender {
                 .replyMarkup(replyKeyboard)
                 .parseMode("HTML").build();
 
-        this.send(sendMessage);
+        send(sendMessage);
     }
 
     public void send(long chatId, String text, int replyToMessageId, ReplyKeyboard replyKeyboard) throws TelegramApiException {
@@ -61,7 +61,7 @@ public class MessageSender {
                 .replyMarkup(replyKeyboard)
                 .parseMode("HTML").build();
 
-        this.send(sendMessage);
+        send(sendMessage);
     }
 
     public void sendPhoto(long chatId, String media, String caption) throws TelegramApiException {
